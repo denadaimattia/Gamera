@@ -21,6 +21,9 @@ public class GameraScript : MonoBehaviour {
     //Number of ray in FOV angle
     public int rayNumber = 25;
 
+    //Enabled raycast tecnique
+    public bool enableRayCast = false;
+
     //Enabled debug visualizzation
     public bool enableDebug = true;
     
@@ -35,10 +38,39 @@ public class GameraScript : MonoBehaviour {
         angleRay = viewAngle / rayNumber;
         halfAngle = viewAngle / 2.0f;
     }
-	
+
+
+    //Check if the target is visible by the object
+    //return bool True if the target is visible 
+    public bool isTargetVisible()
+    {
+        if(enableRayCast)
+        {
+            return isTargetVisibleByRayCast();
+        }
+        else
+        {
+            return isTargetVisibleOnFOV();
+        }
+    }
+
+    //Get distance from target
+    //return float -> the distance from the target
+    public float getDistanceFromTarget()
+    {
+        if (target != null)
+        {
+            return Vector3.Distance(transform.position, target.position);
+        }
+
+        return -1;
+    }
+
+    #region PRIVATE FUNCTION
+
     //Check if the target is visible by the object using RayCast
     //return bool True if the target is visible 
-    public bool isTargetVisibleByRayCast()
+    private bool isTargetVisibleByRayCast()
     {
         bool result = false;
         RaycastHit hitInfo;
@@ -67,13 +99,13 @@ public class GameraScript : MonoBehaviour {
 
     //Check if the target is visible by the object
     //return bool True if the target is visible 
-    public bool isTargetVisibleOnFOV()
+    private bool isTargetVisibleOnFOV()
     {
         GameObject[] targets = null;
         if (target == null)
         {
             targets = GameObject.FindGameObjectsWithTag(targetTag);
-            
+
             for (int i = 0; i < targets.Length; ++i)
             {
                 var heading = targets[i].transform.position - transform.position;
@@ -99,17 +131,7 @@ public class GameraScript : MonoBehaviour {
 
     }
 
-    //Get distance from target
-    //return float -> the distance from the target
-    public float getDistanceFromTarget()
-    {
-        if (target != null)
-        {
-            return Vector3.Distance(transform.position, target.position);
-        }
-
-        return -1;
-    }
+    #endregion
 
     #endregion
 

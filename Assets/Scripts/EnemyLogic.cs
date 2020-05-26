@@ -6,11 +6,8 @@ public class EnemyLogic : MonoBehaviour {
 
     #region PROPERTIES
     //Enabeld focus on target, when detect
-    public bool focusOntarget = false;
-
-    //Enabled raycast tecnique
-    public bool enableRayCast = false;
-    
+    public bool focusOnTarget = false;
+        
     private GameraScript gameraScript = null;
 
     #endregion
@@ -27,29 +24,15 @@ public class EnemyLogic : MonoBehaviour {
         if (gameraScript)
         {
             updateColorByDistance();
-
-            if (enableRayCast)
-            {
-                if (gameraScript.isTargetVisibleByRayCast())
+            
+                if (gameraScript.isTargetVisible())
                 {
                     GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-                    if (focusOntarget)
+                    if (focusOnTarget)
                     {
                         updateFocusToTarget();
                     }
                 }
-            }
-            else
-            {
-                if (gameraScript.isTargetVisibleOnFOV())
-                {
-                    GetComponent<Renderer>().material.SetColor("_Color", Color.green);
-                    if (focusOntarget)
-                    {
-                        updateFocusToTarget();
-                    }
-                }
-            }
         }
     }
     
