@@ -45,6 +45,15 @@ public class MovementPlayer : MonoBehaviour {
             {
                 transform.Rotate(new Vector3(0, 1, 0) * Time.deltaTime * movementSpeed * 15.0f, Space.World);
             }
+
+            if (Input.GetKey("q") && !Input.GetKey("e"))
+            {
+                transform.Translate(new Vector3(0, 0, 1) * Time.deltaTime * movementSpeed, Space.World);
+            }
+            else if (Input.GetKey("e") && !Input.GetKey("q"))
+            {
+                transform.Translate(new Vector3(0, 0, -1) * Time.deltaTime * movementSpeed, Space.World);
+            }
         }
         else if(playerNumer == 1)
         {

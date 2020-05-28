@@ -7,7 +7,10 @@ public class EnemyLogic : MonoBehaviour {
     #region PROPERTIES
     //Enabeld focus on target, when detect
     public bool focusOnTarget = false;
-        
+
+    //max distance
+    public float maxDistance = 10;
+
     private GameraScript gameraScript = null;
 
     #endregion
@@ -24,23 +27,27 @@ public class EnemyLogic : MonoBehaviour {
         if (gameraScript)
         {
             updateColorByDistance();
-            
-                if (gameraScript.isTargetVisible())
+
+            foreach (var obj in gameraScript.getTargetsinfo())
+            {
+                if (obj.Value)
                 {
-                    GetComponent<Renderer>().material.SetColor("_Color", Color.green);
                     if (focusOnTarget)
                     {
-                        updateFocusToTarget();
+                        updateFocusToTarget(obj.Key.transform);
                     }
+                    obj.Key.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
                 }
+
+            }
         }
     }
     
     //Rotate the view of the object to the target
     //return void
-    public void updateFocusToTarget()
+    public void updateFocusToTarget(Transform target)
     {
-        Quaternion targetRotation = Quaternion.LookRotation(gameraScript.target.position - transform.position);
+        Quaternion targetRotation = Quaternion.LookRotation(target.position - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5.0f * Time.deltaTime);
     }
 
@@ -48,8 +55,11 @@ public class EnemyLogic : MonoBehaviour {
     //return void
     void updateColorByDistance()
     {
-        float distance = (System.Math.Max(0, (gameraScript.maxDistance - gameraScript.getDistanceFromTarget())) / gameraScript.maxDistance);
-        GetComponent<Renderer>().material.SetColor("_Color", new Color(distance, distance, distance));
+        foreach (var obj in gameraScript.getTargetDistanceInfo())
+        {
+            float distance = (System.Math.Max(0, (maxDistance - obj.Value)) / maxDistance);
+            obj.Key.GetComponent<Renderer>().material.SetColor("_Color", new Color(distance, distance, distance));
+        }
     }
 
     #endregion
